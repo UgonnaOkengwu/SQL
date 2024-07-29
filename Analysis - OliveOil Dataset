@@ -1,0 +1,580 @@
+--selecting all rows and columns from sales table
+SELECT *
+FROM oliveoil.sales;
+
+
+--selecting specific columns
+SELECT order_num,
+       emp_name,
+       prod_category,
+       order_total
+FROM oliveoil.sales;
+
+
+--LIMIT: limiting the output to 10 rows
+SELECT order_num,
+       emp_name,
+       prod_category,
+       order_total
+FROM oliveoil.sales
+LIMIT 10;
+
+
+--selecting one column
+SELECT prod_category
+FROM oliveoil.sales;
+
+--DISTINCT: selecting unique values from one column
+SELECT DISTINCT prod_category
+FROM oliveoil.sales;
+
+--selecting specific columns
+SELECT order_num,
+       emp_name,
+       prod_category,
+       order_total
+FROM oliveoil.sales;
+
+
+--ORDER BY: sorting by order total (default = ascending)
+SELECT order_num,
+       emp_name,
+       prod_category,
+       order_total
+FROM oliveoil.sales
+ORDER BY order_total ASC;
+
+--ORDER BY: sorting by order total descending
+SELECT order_num,
+       emp_name,
+       prod_category,
+       order_total
+FROM oliveoil.sales
+ORDER BY order_total DESC;
+
+
+--ORDER BY: sorting by column 4 descending
+SELECT order_num,
+       emp_name,
+       prod_category,
+       order_total
+FROM oliveoil.sales
+ORDER BY 4 DESC;
+
+
+--ORDER BY: sorting by product category and order total descending
+SELECT order_num,
+       emp_name,
+       prod_category,
+       order_total
+FROM oliveoil.sales
+ORDER BY prod_category ASC,
+        order_total DESC;
+
+--top 5 overall orders
+SELECT order_num,
+       emp_name,
+       prod_category,
+       order_total
+FROM oliveoil.sales
+ORDER BY order_total DESC
+LIMIT 5;
+
+--top 5 overall orders
+SELECT order_num,
+       emp_name,
+       prod_category,
+       order_total
+FROM oliveoil.sales
+ORDER BY order_total DESC
+LIMIT 5;
+
+
+--WHERE: filtering data with the '=' sign
+SELECT order_num,
+       emp_name,
+       prod_category,
+       order_total
+FROM oliveoil.sales
+WHERE prod_category = 'Bath Products'
+ORDER BY order_total DESC
+LIMIT 5;
+
+
+--WHERE: filtering data with the IN operator
+SELECT order_num,
+       emp_name,
+       prod_category,
+       order_total
+FROM oliveoil.sales
+WHERE prod_category IN ('Bath Products', 'Gift Basket')
+ORDER BY order_total DESC
+LIMIT 5;
+
+
+--WHERE: filtering data with the '!=' sign
+SELECT order_num,
+       emp_name,
+       prod_category,
+       order_total
+FROM oliveoil.sales
+WHERE prod_category != 'Olive Oil'
+ORDER BY order_total DESC
+LIMIT 5;
+
+
+--WHERE: filtering data with the NOT IN operator
+SELECT order_num,
+       emp_name,
+       prod_category,
+       order_total
+FROM oliveoil.sales
+WHERE prod_category NOT IN ('Bath Products', 'Gift Basket')
+ORDER BY order_total DESC
+LIMIT 5;
+
+--WHERE: filtering data with the AND operator, part 1
+SELECT order_num,
+       emp_name,
+       prod_category,
+       order_total
+FROM oliveoil.sales
+WHERE prod_category = 'Bath Products'
+  AND emp_name = 'Clement Carry'
+ORDER BY order_total DESC;
+
+
+--WHERE: filtering data with the AND operator, part 2
+SELECT order_num,
+       emp_name,
+       prod_category,
+       quantity,
+       order_total
+FROM oliveoil.sales
+WHERE prod_category = 'Bath Products'
+  AND emp_name = 'Clement Carry'
+  AND quantity > 3
+ORDER BY order_total DESC;
+
+
+--WHERE: filtering data with the BETWEEN operator
+SELECT order_num,
+       emp_name,
+       prod_category,
+       quantity,
+       order_total
+FROM oliveoil.sales
+WHERE prod_category = 'Bath Products'
+  AND emp_name = 'Clement Carry'
+  AND quantity BETWEEN 2 and 4
+ORDER BY order_total DESC;
+
+
+--WHERE: filtering data with the OR operator, part 1
+SELECT order_num,
+       emp_name,
+       prod_category,
+       quantity,
+       order_total
+FROM oliveoil.sales
+WHERE prod_category = 'Bath Products'
+   OR emp_name = 'Clement Carry'
+ORDER BY order_total DESC;
+
+
+--WHERE: filtering data with the OR operator, part 2
+SELECT order_num,
+       emp_name,
+       prod_category,
+       quantity,
+       order_total
+FROM oliveoil.sales
+WHERE (prod_category = 'Bath Products'
+    OR emp_name = 'Clement Carry')
+   AND quantity > 5
+ORDER BY order_total DESC;
+
+--unique customer types available
+SELECT DISTINCT cust_type
+FROM oliveoil.sales;
+
+
+--orders sorted by largest to smallest order total
+SELECT order_num,
+       order_type,
+       cust_type,
+       order_total
+FROM oliveoil.sales
+ORDER BY order_total DESC;
+
+
+--top 20 orders in North Carolina and Georgia
+SELECT order_num,
+       order_type,
+       cust_type,
+       order_total
+FROM oliveoil.sales
+WHERE cust_state IN ('North Carolina', 'Georgia')
+ORDER BY order_total DESC
+LIMIT 20;
+
+--COUNT: counting orders
+SELECT COUNT(*)
+FROM oliveoil.sales;
+
+
+--COUNT: counting gift basket orders
+SELECT COUNT(*)
+FROM oliveoil.sales
+WHERE prod_category = 'Gift Basket';
+
+
+--COUNT, AS: counting customers and using an alias
+SELECT COUNT(DISTINCT cust_id) AS customer_count
+FROM oliveoil.sales;
+
+
+--AS: using an alias
+SELECT cust_id AS client_id
+FROM oliveoil.sales;
+
+--SUM, AVG: total sales and average order value
+SELECT SUM(order_total) AS sum_of_orders,
+       AVG(order_total) AS avg_order
+FROM oliveoil.sales;
+
+
+--SUM, AVG: total sales and average order value for business customers
+SELECT SUM(order_total) AS sum_of_orders,
+       AVG(order_total) AS avg_order
+FROM oliveoil.sales
+WHERE cust_type = 'Business';
+
+
+--MIN, MAX: minimum and maximum orders for business customers
+SELECT MIN(order_total) AS min_order,
+       MAX(order_total) AS max_order
+FROM oliveoil.sales
+WHERE cust_type = 'Business';
+
+--GROUP BY: grouping data and aggregate functions
+SELECT cust_state,
+       SUM(order_total) AS sum_of_orders,
+       COUNT(*) AS order_count,
+       AVG(order_total) AS avg_order
+FROM oliveoil.sales
+WHERE cust_type = 'Business'
+GROUP BY cust_state
+ORDER BY sum_of_orders DESC;
+
+--HAVING: filtering by a group aggregate value
+SELECT cust_state,
+       SUM(order_total) AS sum_of_orders,
+       COUNT(*) AS order_count,
+       AVG(order_total) AS avg_order
+FROM oliveoil.sales
+GROUP BY cust_state
+HAVING avg_order < 200
+ORDER BY sum_of_orders DESC;
+
+--selecting the unique number of employees working for each state
+SELECT cust_state,
+       COUNT(DISTINCT emp_id) AS emp_count
+FROM oliveoil.sales
+GROUP BY cust_state;
+
+
+--including the sum of total order sales by state ordered largest to smallest
+SELECT cust_state,
+       COUNT(DISTINCT emp_id) AS emp_count,
+       SUM(order_total) AS sum_of_orders
+FROM oliveoil.sales
+GROUP BY cust_state
+ORDER BY sum_of_orders DESC;
+
+
+--filtering for states with 6 employees and over 40000 in sales
+SELECT cust_state,
+       COUNT(DISTINCT emp_id) AS emp_count,
+       SUM(order_total) AS sum_of_orders
+FROM oliveoil.sales
+GROUP BY cust_state
+HAVING emp_count = 6
+   AND sum_of_orders > 40000
+ORDER BY sum_of_orders DESC;
+
+
+--only including business customers
+SELECT cust_state,
+       COUNT(DISTINCT emp_id) AS emp_count,
+       SUM(order_total) AS sum_of_orders
+FROM oliveoil.sales
+WHERE cust_type = 'Business'
+GROUP BY cust_state
+HAVING emp_count = 6
+   AND sum_of_orders > 40000
+ORDER BY sum_of_orders DESC;
+
+--selecting all rows and columns from employees table
+SELECT *
+FROM oliveoil.employees;
+
+
+--EQUIJOIN: basic equijoin
+SELECT job_title,
+       emp_id,
+       order_total
+FROM oliveoil.employees,
+     oliveoil.sales
+WHERE oliveoil.employees.id = oliveoil.sales.emp_id;
+
+
+--EQUIJOIN: count of employees and total sales per job title
+SELECT job_title,
+       COUNT(DISTINCT emp_id) AS emp_count,
+       SUM(order_total) AS total_sales
+FROM oliveoil.employees,
+     oliveoil.sales
+WHERE oliveoil.employees.id = oliveoil.sales.emp_id
+GROUP BY job_title
+ORDER BY total_sales DESC;
+
+--EQUIJOIN: count of employees and total sales per job title
+SELECT job_title,
+       COUNT(DISTINCT id) AS emp_count,
+       SUM(order_total) AS total_sales
+FROM oliveoil.employees, oliveoil.sales
+WHERE oliveoil.employees.id = oliveoil.sales.emp_id
+GROUP BY job_title
+ORDER BY total_sales DESC;
+
+
+--INNER JOIN: count of employees and total sales per job title
+SELECT job_title,
+       COUNT(DISTINCT id) AS emp_count,
+       SUM(order_total) AS total_sales
+FROM oliveoil.employees
+INNER JOIN oliveoil.sales
+ON oliveoil.employees.id = oliveoil.sales.emp_id
+GROUP BY job_title
+ORDER BY total_sales DESC;
+
+
+--INNER JOIN: count of employees and total sales per job title with table names
+SELECT oliveoil.employees.job_title,
+       COUNT(DISTINCT oliveoil.employees.id) AS emp_count,
+       SUM(oliveoil.sales.order_total) AS total_sales
+FROM oliveoil.employees
+INNER JOIN oliveoil.sales
+ON oliveoil.employees.id = oliveoil.sales.emp_id
+GROUP BY oliveoil.employees.job_title
+ORDER BY total_sales DESC;
+
+
+----INNER JOIN: count of employees and total sales per job title with table aliases
+SELECT e.job_title,
+       COUNT(DISTINCT e.id) AS emp_count,
+       SUM(s.order_total) AS total_sales
+FROM oliveoil.employees AS e
+INNER JOIN oliveoil.sales AS s
+ON e.id = s.emp_id
+GROUP BY e.job_title
+ORDER BY total_sales DESC;
+
+--INNER JOIN: total sales of product category olive oil per region
+SELECT r.region,
+       SUM(s.order_total) AS total_sales
+FROM oliveoil.regions AS r
+INNER JOIN oliveoil.sales AS s
+ON r.state = s.cust_state
+WHERE s.prod_category = 'Olive Oil'
+GROUP BY r.region
+ORDER BY total_sales DESC;
+
+
+--INNER JOIN: total sales of product category olive oil per region for only business customers
+SELECT r.region,
+       SUM(s.order_total) AS total_sales
+FROM oliveoil.regions AS r
+INNER JOIN oliveoil.sales AS s
+ON r.state = s.cust_state
+WHERE s.prod_category = 'Olive Oil'
+  AND s.cust_type = 'Business'
+GROUP BY r.region
+ORDER BY total_sales DESC;
+
+
+--Bonus - EQUIJOIN: total sales of product category olive oil per region for only business customers
+SELECT r.region,
+       SUM(s.order_total) AS total_sales
+FROM oliveoil.regions AS r, oliveoil.sales AS s
+WHERE r.state = s.cust_state
+  AND s.prod_category = 'Olive Oil'
+  AND s.cust_type = 'Business'
+GROUP BY r.region
+ORDER BY total_sales DESC;
+
+--sales employees in Florida
+SELECT DISTINCT emp_name
+FROM oliveoil.sales
+WHERE cust_state = 'Florida';
+
+
+--sum of order totals for each sales employee in Florida
+SELECT emp_name,
+       SUM(order_total) AS sum_of_orders
+FROM oliveoil.sales
+WHERE cust_state = 'Florida'
+GROUP BY emp_name
+ORDER BY sum_of_orders DESC;
+
+
+--CASE Statement: grouping sales employees into teams
+SELECT CASE
+         WHEN emp_name IN ('Clement Carry', 'Cynthia Cash', 'Georgia Eddowes') THEN 'Team 1'
+         WHEN emp_name IN ('Kristen Phillips', 'Mitch White', 'Norm Hawkins') THEN 'Team 2'
+       END AS employee_team,
+       SUM(order_total) AS sum_of_orders
+FROM oliveoil.sales
+WHERE cust_state = 'Florida'
+GROUP BY employee_team
+ORDER BY sum_of_orders DESC;
+
+--CASE Statement, ELSE: grouping sales employees into teams
+SELECT CASE
+         WHEN emp_name IN ('Clement Carry', 'Cynthia Cash', 'Georgia Eddowes') THEN 'Team 1'
+         WHEN emp_name IN ('Kristen Phillips', 'Mitch White', 'Norm Hawkins') THEN 'Team 2'
+         ELSE "Other"
+       END AS employee_team,
+       SUM(order_total) AS sum_of_orders
+FROM oliveoil.sales
+GROUP BY employee_team
+ORDER BY sum_of_orders DESC;
+
+
+--CASE Statement: grouping order sizes
+SELECT CASE
+         WHEN quantity <= 6 THEN 'Small Order'
+         WHEN quantity > 6 THEN 'Bulk Order'
+       END AS order_size,
+       SUM(order_total) AS sum_of_orders
+FROM oliveoil.sales
+WHERE cust_state = 'California'
+GROUP BY order_size
+ORDER BY sum_of_orders DESC;
+
+
+--CASE Statement: checking CASE categorization on raw order data
+SELECT CASE
+         WHEN quantity <= 6 THEN 'Small Order'
+         WHEN quantity > 6 THEN 'Bulk Order'
+       END AS order_size,
+       quantity,
+       order_total
+FROM oliveoil.sales
+WHERE cust_state = 'California';
+
+--Calculated Fields, numerical: total net sales
+SELECT sum(order_total*.94) AS net_sales
+FROM oliveoil.sales;
+
+
+--Calculated Fields, numerical: total net sales per state
+SELECT cust_state,
+       sum(order_total*.94) AS net_sales
+FROM oliveoil.sales
+GROUP BY cust_state
+ORDER BY net_sales DESC;
+
+
+--Calculated Fields, text: combining text columns
+SELECT order_type,
+       cust_type,
+       order_type || '-' || cust_type AS order_cust_type
+FROM oliveoil.sales;
+
+--full list of products available
+SELECT DISTINCT prod_name
+FROM oliveoil.sales
+ORDER BY prod_name;
+
+
+--list of Basil products available
+SELECT DISTINCT prod_name
+FROM oliveoil.sales
+WHERE prod_name LIKE 'Basil%'
+ORDER BY prod_name;
+
+
+--total sales per Basil product
+SELECT prod_name,
+       SUM(order_total) AS sum_of_orders
+FROM oliveoil.sales
+WHERE prod_name LIKE 'Basil%'
+GROUP BY prod_name
+ORDER BY sum_of_orders DESC;
+
+
+--list of single-pack Basil products available
+SELECT DISTINCT prod_name
+FROM oliveoil.sales
+WHERE prod_name LIKE 'Basil Extra Virgin Olive Oil _pk'
+;
+
+--list of orders made by Business customers or Olive Oil products
+
+SELECT order_num,
+       cust_type,
+       prod_category,
+       order_total
+FROM oliveoil.sales
+WHERE cust_type = 'Business'
+   OR prod_category = 'Olive Oil';
+
+--UNION: list of orders made by Business customers or Olive Oil products
+SELECT order_num,
+       cust_type,
+       prod_category,
+       order_total
+FROM oliveoil.sales
+WHERE cust_type = 'Business'
+UNION ALL
+SELECT order_num,
+       cust_type,
+       prod_category,
+       order_total
+FROM oliveoil.sales
+WHERE prod_category = 'Olive Oil';
+
+--total sales and average price per item for Lemon, Rosemary and Chili product lines
+SELECT CASE
+         WHEN prod_name LIKE 'Lemon%' THEN 'Lemon'
+         WHEN prod_name LIKE 'Rosemary%' THEN 'Rosemary'
+         WHEN prod_name LIKE 'Chili%' THEN 'Chili'
+         ELSE 'Other'
+       END AS product_lines,
+       SUM(order_total) AS sum_of_orders,
+       SUM(order_total) / SUM(quantity) AS price_per_item
+FROM oliveoil.sales
+WHERE product_lines != 'Other'
+GROUP BY product_lines
+ORDER BY sum_of_orders DESC;
+
+
+--orders made by Business customers in top-selling states and all Gift Basket orders
+SELECT order_num,
+       cust_state,
+       cust_type,
+       prod_category,
+       order_total
+FROM oliveoil.sales
+WHERE cust_type = 'Business'
+  AND cust_state IN ('Texas', 'California', 'Florida')
+UNION
+SELECT order_num,
+       cust_state,
+       cust_type,
+       prod_category,
+       order_total
+FROM oliveoil.sales
+WHERE prod_category = 'Gift Basket';
